@@ -27,13 +27,13 @@ export const {
   callbacks: {
     jwt({ token, user }) {
       if (user) { // User is available during sign-in
-        token.role = user.role
+        token.role = (user as { role?: unknown }).role
       }
       return token
     },
     session({ session, token }) {
       if (session.user) {
-        (session.user as any).role = token.role
+        (session.user as { role?: unknown }).role = token.role
       }
       return session
     },

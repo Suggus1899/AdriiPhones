@@ -1,18 +1,18 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2, Home, Loader2, Smartphone } from "lucide-react";
 import { updateProductStatus } from "@/lib/actions";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
   
   const sessionId = searchParams?.get("session_id");
   const productId = searchParams?.get("product_id");
+  
+  const [loading, setLoading] = useState(!!(productId && sessionId));
 
   useEffect(() => {
     if (productId && sessionId) {
@@ -23,8 +23,6 @@ function SuccessContent() {
       updateProductStatus(productId, "SOLD")
         .then(() => setLoading(false))
         .catch(console.error);
-    } else {
-      setLoading(false);
     }
   }, [productId, sessionId]);
 

@@ -24,7 +24,7 @@ export default async function SuccessPage({ params, searchParams }: { params: { 
         
         <div className="bg-zinc-50 rounded-2xl p-4 mb-8 text-left border border-zinc-100">
           <p className="text-sm text-zinc-500 mb-1">ID del Pedido</p>
-          <p className="font-mono text-zinc-900">ORD-{Math.random().toString(36).substring(2, 10).toUpperCase()}</p>
+          <p className="font-mono text-zinc-900">ORD-{crypto.randomUUID().split("-")[0].toUpperCase()}</p>
         </div>
 
         <Link 
