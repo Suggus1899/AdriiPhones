@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("ADMIN")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  model       String
+  capacity    String
+  color       String
+  battery     String
+  condition   String
+  accessories String?
+  price       Float
+  images      String
+  video       String?
+  description String?
+  imei        String?
+  status      String   @default("AVAILABLE") // AVAILABLE, RESERVED, SOLD
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  orders      Order[]
+}
+
+model Lead {
+  id          String   @id @default(cuid())
+  model       String
+  capacity    String
+  battery     String
+  condition   String
+  accessories String?
+  city        String?
+  targetPrice Float
+  images      String
+  contact     String
+  status      String   @default("NEW") // NEW, CONTACTED, REJECTED, BOUGHT
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  type        String // DIRECT_BUY, RESERVATION
+  amount      Float
+  paymentSt   String // PENDING, PAID, FAILED
+  shippingName    String
+  shippingAddress String
+  shippingPhone   String
+  shippingZip     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
