@@ -56,6 +56,7 @@ const BATTERY_MULTIPLIERS: Record<string, number> = {
   "<80%": 0.65,
 };
 
+const BOX_BONUS = 20;
 const CHARGER_BONUS = 15;
 
 export default function Calculator() {
