@@ -3,8 +3,10 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { Lock } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,12 +17,13 @@ export default function LoginPage() {
     const result = await signIn("credentials", {
       email,
       password,
-      redirect: true,
-      redirectTo: "/admin",
+      redirect: false,
     });
 
     if (result?.error) {
       setError("Credenciales incorrectas");
+    } else {
+      router.push("/admin");
     }
   };
 
