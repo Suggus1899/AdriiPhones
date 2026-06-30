@@ -1,10 +1,33 @@
 import Link from "next/link";
 import { Smartphone, ChevronRight } from "lucide-react";
 import { getProducts } from "@/lib/actions";
+import CatalogoFilters from "@/components/CatalogoFilters";
+import { Suspense } from "react";
 
-export default async function CatalogoPage() {
-  const products = await getProducts();
-  
+export default async function CatalogoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ modelo?: string; estado?: string; orden?: string }>;
+}) {
+  const { modelo, estado, orden } = await searchParams;
+  let products = await getProducts();
+
+  if (modelo) {
+    products = products.filter((p) => p.model.includes(modelo));
+  }
+  if (estado) {
+    products = products.filter((p) => p.condition === estado);
+  }
+  if (orden === "precio-asc") {
+    products = products.sort((a, b) => a.price - b.price);
+  } else if (orden === "precio-desc") {
+    products = products.sort((a, b) => b.price - a.price);
+  }
+
+  const available = products.filter((p) => p.status === "AVAILABLE");
+  const unavailable = products.filter((p) => p.status !== "AVAILABLE");
+  const sorted = [...available, ...unavailable];
+
   return (
     <main className="min-h-screen bg-zinc-50 pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,31 +43,20 @@ export default async function CatalogoPage() {
             </p>
           </div>
           
-          {/* Filtros simples (UI) */}
-          <div className="flex gap-2">
-            <select className="px-4 py-2.5 rounded-xl border border-zinc-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-              <option value="">Cualquier modelo</option>
-              <option value="15">iPhone 15 Series</option>
-              <option value="14">iPhone 14 Series</option>
-              <option value="13">iPhone 13 Series</option>
-            </select>
-            <select className="px-4 py-2.5 rounded-xl border border-zinc-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-              <option value="">Cualquier estado</option>
-              <option value="nuevo">Como nuevo</option>
-              <option value="bueno">Buen estado</option>
-            </select>
-          </div>
+          <Suspense fallback={null}>
+            <CatalogoFilters />
+          </Suspense>
         </div>
 
         {/* Grid de Productos */}
-        {products.length === 0 ? (
+        {sorted.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-3xl border border-zinc-100">
-            <h2 className="text-xl font-bold text-zinc-900 mb-2">Catálogo vacío</h2>
-            <p className="text-zinc-500">Pronto añadiremos nuevo stock.</p>
+            <h2 className="text-xl font-bold text-zinc-900 mb-2">Sin resultados</h2>
+            <p className="text-zinc-500">Prueba con otros filtros o vuelve más tarde.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product) => (
+            {sorted.map((product) => (
             <Link 
               href={`/catalogo/${product.id}`} 
               key={product.id}

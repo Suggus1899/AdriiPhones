@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -20,6 +20,12 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+const fontDisplay = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["700", "800"],
+})
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,9 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="es"
       suppressHydrationWarning
-      className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
+      className={`${fontSans.variable} ${fontMono.variable} ${fontDisplay.variable} font-sans antialiased`}
     >
       <body>
         <ThemeProvider>

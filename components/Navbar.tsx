@@ -11,8 +11,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const links = [
-    { name: "Vender", href: "/" },
     { name: "Comprar", href: "/catalogo" },
+    { name: "Vender mi iPhone", href: "/vender" },
   ];
 
   return (

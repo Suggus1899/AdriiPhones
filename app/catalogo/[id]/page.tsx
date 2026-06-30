@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, Shield, Battery, Box } from "lucide-react";
 import { getProductById } from "@/lib/actions";
 import CheckoutButtons from "@/components/CheckoutButtons";
+import ProductGallery from "@/components/ProductGallery";
 import { notFound } from "next/navigation";
 
 export default async function ProductDetailPage({ params }: { params: { id: string } }) {
@@ -24,25 +25,8 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
           
-          {/* Columna Izquierda: Galería (Mock simple) */}
-            <div className="space-y-4">
-              <div className="aspect-[4/5] md:aspect-square bg-zinc-100 rounded-3xl overflow-hidden relative">
-                <img 
-                  src={images[0]} 
-                  alt={product.model}
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-              {images.length > 1 && (
-                <div className="grid grid-cols-4 gap-4">
-                  {images.map((img, idx) => (
-                    <div key={idx} className={`aspect-square bg-zinc-100 rounded-xl overflow-hidden cursor-pointer hover:opacity-80 transition-opacity ${idx === 0 ? 'ring-2 ring-blue-600 ring-offset-2' : ''}`}>
-                      <img src={img} alt={`thumb ${idx}`} className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+          {/* Columna Izquierda: Galería */}
+          <ProductGallery images={images} model={product.model} />
 
           {/* Columna Derecha: Info del producto */}
           <div className="flex flex-col">
