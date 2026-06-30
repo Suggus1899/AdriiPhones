@@ -4,6 +4,11 @@ import { PrismaClient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
+import { signOut } from "@/auth";
+
+export async function signOutAction() {
+  await signOut({ redirectTo: "/" });
+}
 
 const prisma = new PrismaClient();
 
@@ -17,7 +22,7 @@ async function uploadFilesLocally(formData: FormData, fieldName: string): Promis
   // Ensure dir exists
   try {
     await mkdir(uploadDir, { recursive: true });
-  } catch (e) {}
+  } catch {}
 
   const urls: string[] = [];
 
