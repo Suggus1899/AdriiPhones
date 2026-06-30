@@ -10,7 +10,12 @@ export default async function CatalogoPage({
   searchParams: Promise<{ modelo?: string; estado?: string; orden?: string }>;
 }) {
   const { modelo, estado, orden } = await searchParams;
-  let products = await getProducts();
+  const allProducts = await getProducts();
+
+  const uniqueModels = [...new Set(allProducts.map((p) => p.model))].sort();
+  const uniqueConditions = [...new Set(allProducts.map((p) => p.condition))].sort();
+
+  let products = [...allProducts];
 
   if (modelo) {
     products = products.filter((p) => p.model.includes(modelo));
@@ -44,15 +49,27 @@ export default async function CatalogoPage({
           </div>
           
           <Suspense fallback={null}>
-            <CatalogoFilters />
+            <CatalogoFilters
+              models={uniqueModels}
+              conditions={uniqueConditions}
+              currentModelo={modelo ?? ""}
+              currentEstado={estado ?? ""}
+              currentOrden={orden ?? ""}
+            />
           </Suspense>
         </div>
 
         {/* Grid de Productos */}
         {sorted.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-3xl border border-zinc-100">
-            <h2 className="text-xl font-bold text-zinc-900 mb-2">Sin resultados</h2>
-            <p className="text-zinc-500">Prueba con otros filtros o vuelve más tarde.</p>
+            <h2 className="text-xl font-bold text-zinc-900 mb-2">
+              {allProducts.length === 0 ? "Catálogo vacío" : "Sin resultados"}
+            </h2>
+            <p className="text-zinc-500">
+              {allProducts.length === 0
+                ? "Pronto añadiremos nuevo stock. Vuelve pronto."
+                : "Prueba con otros filtros o elimínalos para ver todo el stock."}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

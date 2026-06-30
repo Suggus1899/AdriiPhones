@@ -3,7 +3,21 @@
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCallback } from "react";
 
-export default function CatalogoFilters() {
+interface CatalogoFiltersProps {
+  models: string[];
+  conditions: string[];
+  currentModelo: string;
+  currentEstado: string;
+  currentOrden: string;
+}
+
+export default function CatalogoFilters({
+  models,
+  conditions,
+  currentModelo,
+  currentEstado,
+  currentOrden,
+}: CatalogoFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -25,39 +39,39 @@ export default function CatalogoFilters() {
     router.push(pathname + "?" + createQueryString(name, value));
   };
 
+  const selectClass =
+    "px-4 py-2.5 rounded-xl border border-zinc-200 bg-white text-zinc-800 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-default";
+
   return (
     <div className="flex flex-wrap gap-2">
       <select
-        defaultValue={searchParams.get("modelo") ?? ""}
+        value={currentModelo}
         onChange={(e) => handleChange("modelo", e.target.value)}
-        className="px-4 py-2.5 rounded-xl border border-zinc-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
+        className={selectClass}
+        disabled={models.length === 0}
       >
-        <option value="">Cualquier modelo</option>
-        <option value="17">iPhone 17 Series</option>
-        <option value="16">iPhone 16 Series</option>
-        <option value="15">iPhone 15 Series</option>
-        <option value="14">iPhone 14 Series</option>
-        <option value="13">iPhone 13 Series</option>
-        <option value="12">iPhone 12 Series</option>
-        <option value="11">iPhone 11 Series</option>
-        <option value="SE">iPhone SE</option>
+        <option value="">Todos los modelos</option>
+        {models.map((m) => (
+          <option key={m} value={m}>{m}</option>
+        ))}
       </select>
 
       <select
-        defaultValue={searchParams.get("estado") ?? ""}
+        value={currentEstado}
         onChange={(e) => handleChange("estado", e.target.value)}
-        className="px-4 py-2.5 rounded-xl border border-zinc-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
+        className={selectClass}
+        disabled={conditions.length === 0}
       >
         <option value="">Cualquier estado</option>
-        <option value="Como nuevo">Como nuevo</option>
-        <option value="Buen estado">Buen estado</option>
-        <option value="Con detalles">Con detalles</option>
+        {conditions.map((c) => (
+          <option key={c} value={c}>{c}</option>
+        ))}
       </select>
 
       <select
-        defaultValue={searchParams.get("orden") ?? ""}
+        value={currentOrden}
         onChange={(e) => handleChange("orden", e.target.value)}
-        className="px-4 py-2.5 rounded-xl border border-zinc-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
+        className={selectClass}
       >
         <option value="">Más recientes</option>
         <option value="precio-asc">Precio: menor a mayor</option>
