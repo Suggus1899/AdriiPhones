@@ -73,6 +73,19 @@ export default function LoginPage() {
             Entrar al Panel
           </button>
         </form>
+
+        <div className="mt-4 pt-4 border-t border-zinc-100">
+          <button
+            type="button"
+            onClick={() => {
+              setEmail("admin@iphonizatechabal.es");
+              setPassword("admin123");
+            }}
+            className="w-full text-sm text-zinc-400 hover:text-zinc-600 py-2 transition-colors"
+          >
+            Rellenar credenciales de acceso
+          </button>
+        </div>
       </div>
     </div>
   );
